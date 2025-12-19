@@ -1,16 +1,31 @@
-import { use } from "react";
+"use client";
 
-export default function ConversationDetailPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = use(params);
+import * as React from "react";
+import { useParams, useRouter } from "next/navigation";
+import { mockConversations } from "@/lib/data/mock-data";
+import { ChatInterface } from "@/components/conversations/chat-interface";
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+
+export default function ConversationDetailPage() {
+  const params = useParams();
+  const router = useRouter();
+  const id = params?.id as string;
   
-  return (
-    <div className="flex-1 p-6">
-      <h1 className="text-2xl font-semibold">Conversation {id}</h1>
-      <p className="text-muted-foreground mt-2">Conversation detail coming soon...</p>
-    </div>
-  );
+  const conversation = React.useMemo(() => {
+    return mockConversations.find(c => c.id === id);
+  }, [id]);
+
+  if (!conversation) {
+    return (
+       <div className="flex flex-col items-center justify-center h-full gap-4">
+          <p className="text-muted-foreground">Conversation not found</p>
+          <Button variant="outline" onClick={() => router.push('/dashboard/conversations')}>
+             <ArrowLeft className="mr-2 h-4 w-4" /> Back to Inbox
+          </Button>
+       </div>
+    );
+  }
+
+  return <ChatInterface conversation={conversation} />;
 }

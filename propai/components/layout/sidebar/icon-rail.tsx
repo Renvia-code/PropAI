@@ -67,14 +67,17 @@ export function IconRail({
   };
 
   return (
-    <div className="flex h-full w-20 flex-col bg-icon-rail border-r border-secondary-panel-border">
+    <div className={cn(
+      "flex h-full w-20 flex-col bg-icon-rail",
+      isPanelOpen && "border-r border-secondary-panel-border"
+    )}>
       {/* Logo */}
-      <div className="flex h-16 items-center justify-center border-b border-secondary-panel-border">
+      <div className="flex h-16 items-center justify-center">
         <Link
           href="/dashboard"
-          className="flex h-11 w-11 items-center justify-center rounded-xl sidebar-icon-hover-transition hover:bg-icon-rail-hover"
+          className="flex h-12 w-12 items-center justify-center rounded-xl sidebar-icon-hover-transition hover:bg-icon-rail-hover"
         >
-          <Asterisk className="h-8 w-8 text-propai-accent" strokeWidth={2.5} />
+          <Asterisk className="h-10 w-10 text-propai-accent" strokeWidth={2.5} />
         </Link>
       </div>
 

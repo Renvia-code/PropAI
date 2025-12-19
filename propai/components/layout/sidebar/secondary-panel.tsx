@@ -46,8 +46,9 @@ export function SecondaryPanel({
         isOpen ? "w-60 opacity-100" : "w-0 opacity-0 overflow-hidden"
       )}
     >
-      {/* Header with collapse button only */}
-      <div className="flex h-14 items-center justify-end px-4">
+      {/* Header with title and collapse button */}
+      <div className="flex h-16 items-center justify-between px-4 border-b border-secondary-panel-border">
+        <span className="text-base font-semibold">{panelTitle}</span>
         <button
           onClick={onClose}
           className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
@@ -58,12 +59,7 @@ export function SecondaryPanel({
       </div>
 
       <ScrollArea className="flex-1">
-        <nav className="px-4 pb-4">
-          {/* Section Title */}
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3 px-2">
-            {panelTitle}
-          </h2>
-
+        <nav className="px-3 py-3">
           {/* Submenu Items */}
           {submenuItems.length > 0 ? (
             <ul className="space-y-1">
@@ -84,7 +80,7 @@ export function SecondaryPanel({
               ))}
             </ul>
           ) : (
-            <p className="text-sm text-muted-foreground/60 px-2 py-4">
+            <p className="text-sm text-muted-foreground/60 px-3 py-4">
               No submenu items
             </p>
           )}
