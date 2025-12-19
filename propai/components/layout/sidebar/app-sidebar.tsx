@@ -6,7 +6,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { navigationConfig, type NavItem } from "@/config/navigation";
 import { useSidebarState } from "@/hooks/use-sidebar-state";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useSettingsPanel } from "@/components/layout/settings-panel";
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { IconRail } from "./icon-rail";
 import { SecondaryPanel } from "./secondary-panel";
@@ -21,7 +20,6 @@ export function AppSidebar() {
     togglePanel,
     isHydrated,
   } = useSidebarState();
-  const { isOpen: isSettingsOpen, close: closeSettings } = useSettingsPanel();
 
   const [activeSection, setActiveSection] = React.useState<string | null>(null);
   const [mobileOpen, setMobileOpen] = React.useState(false);
@@ -45,11 +43,6 @@ export function AppSidebar() {
 
   // Handle icon click
   const handleIconClick = (item: NavItem) => {
-    // Close settings panel when clicking any non-settings nav icon
-    if (isSettingsOpen && item.id !== "settings") {
-      closeSettings();
-    }
-
     if (isMobile) {
       // On mobile, open the sheet if clicking a different section with submenu
       if (item.submenu && item.submenu.length > 0) {
@@ -83,8 +76,8 @@ export function AppSidebar() {
   if (!isHydrated) {
     return (
       <div className="flex h-full">
-        <div className="w-16 bg-icon-rail" />
-        <div className="w-60 bg-secondary-panel" />
+        <div className="w-20 bg-icon-rail" />
+        <div className="w-60 bg-icon-rail" />
       </div>
     );
   }
@@ -102,7 +95,7 @@ export function AppSidebar() {
         <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
           <SheetContent
             side="left"
-            className="w-72 p-0 bg-secondary-panel"
+            className="w-72 p-0 bg-icon-rail"
           >
             <SheetHeader className="sr-only">
               <SheetTitle>Navigation</SheetTitle>

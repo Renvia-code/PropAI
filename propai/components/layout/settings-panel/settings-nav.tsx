@@ -1,11 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { ArrowLeft, User, Bell, Activity, Shield, Building2, Palette, CreditCard, Lock } from "lucide-react";
 
 import { cn } from "@/lib/utils";
-import { useSettingsPanel } from "./settings-panel-provider";
 
 interface NavItem {
   label: string;
@@ -30,10 +29,12 @@ const orgSettingsNav: NavItem[] = [
 
 export function SettingsNav() {
   const pathname = usePathname();
-  const { mode, close } = useSettingsPanel();
+  const router = useRouter();
 
-  const navItems = mode === "user" ? userSettingsNav : orgSettingsNav;
-  const title = mode === "user" ? "Account Settings" : "Organization Settings";
+  // Determine mode based on current path
+  const isUserSettings = pathname.startsWith("/dashboard/account");
+  const navItems = isUserSettings ? userSettingsNav : orgSettingsNav;
+  const title = isUserSettings ? "Account Settings" : "Organization Settings";
 
   const isActive = (href: string) => {
     if (href === "/dashboard/account" || href === "/dashboard/settings") {
@@ -42,12 +43,16 @@ export function SettingsNav() {
     return pathname.startsWith(href);
   };
 
+  const handleBack = () => {
+    router.push("/dashboard");
+  };
+
   return (
     <div className="flex h-full w-[220px] flex-col border-r border-secondary-panel-border bg-icon-rail">
       {/* Header */}
       <div className="flex h-14 items-center px-4">
         <button
-          onClick={close}
+          onClick={handleBack}
           className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -91,4 +96,3 @@ export function SettingsNav() {
     </div>
   );
 }
-

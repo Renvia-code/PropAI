@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Asterisk, Moon, Sun, PanelLeftClose, PanelLeft } from "lucide-react";
 import { useTheme } from "next-themes";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -17,7 +17,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useSettingsPanel } from "@/components/layout/settings-panel";
 
 interface IconRailProps {
   isPanelOpen: boolean;
@@ -33,9 +32,9 @@ export function IconRail({
   onIconClick,
 }: IconRailProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = React.useState(false);
-  const { openUserSettings, openOrgSettings, isOpen: isSettingsOpen } = useSettingsPanel();
 
   React.useEffect(() => {
     setMounted(true);
@@ -54,34 +53,37 @@ export function IconRail({
 
   // Check if user settings is active
   const isUserSettingsActive = pathname.startsWith("/dashboard/account");
+  
+  // Check if org settings is active
+  const isOrgSettingsActive = pathname.startsWith("/dashboard/settings");
 
-  // Handle icon click - special handling for settings
+  // Handle settings icon click - navigate to settings page
   const handleIconClick = (item: NavItem) => {
     if (item.id === "settings") {
-      openOrgSettings();
+      router.push("/dashboard/settings");
     } else {
       onIconClick(item);
     }
   };
 
   return (
-    <div className="flex h-full w-16 flex-col bg-icon-rail">
+    <div className="flex h-full w-20 flex-col bg-icon-rail border-r border-secondary-panel-border">
       {/* Logo */}
-      <div className="flex h-14 items-center justify-center">
+      <div className="flex h-16 items-center justify-center border-b border-secondary-panel-border">
         <Link
           href="/dashboard"
-          className="flex items-center justify-center rounded-lg p-2 sidebar-icon-hover-transition hover:bg-icon-rail-hover"
+          className="flex h-11 w-11 items-center justify-center rounded-xl sidebar-icon-hover-transition hover:bg-icon-rail-hover"
         >
-          <Asterisk className="h-7 w-7 text-propai-accent" strokeWidth={2.5} />
+          <Asterisk className="h-8 w-8 text-propai-accent" strokeWidth={2.5} />
         </Link>
       </div>
 
       {/* Navigation Icons */}
       <TooltipProvider delayDuration={0}>
-        <nav className="flex-1 overflow-y-auto py-2 px-2">
-          <ul className="flex flex-col gap-1">
+        <nav className="flex-1 overflow-y-auto py-2 px-2.5">
+          <ul className="flex flex-col items-center gap-1.5">
             {navigationConfig.map((item) => {
-              const isActive = getIsActive(item);
+              const isActive = getIsActive(item) || (item.id === "settings" && isOrgSettingsActive);
               const isCurrentSection = activeSection === item.id;
 
               return (
@@ -91,7 +93,7 @@ export function IconRail({
                       <button
                         onClick={() => handleIconClick(item)}
                         className={cn(
-                          "flex h-10 w-full items-center justify-center rounded-lg sidebar-icon-hover-transition",
+                          "flex h-11 w-11 items-center justify-center rounded-xl sidebar-icon-hover-transition",
                           "hover:bg-icon-rail-hover",
                           isActive && "bg-icon-rail-active text-propai-accent",
                           isCurrentSection &&
@@ -105,49 +107,49 @@ export function IconRail({
                         {item.id === "agent" ? (
                           <HugeiconsIcon
                             icon={Robot01Icon}
-                            size={20}
+                            size={18}
                             className={cn(isActive && "text-propai-accent")}
                           />
                         ) : item.id === "channels" ? (
                           <HugeiconsIcon
                             icon={TvSmartIcon}
-                            size={20}
+                            size={18}
                             className={cn(isActive && "text-propai-accent")}
                           />
                         ) : item.id === "siteVisits" ? (
                           <HugeiconsIcon
                             icon={Calendar03Icon}
-                            size={20}
+                            size={18}
                             className={cn(isActive && "text-propai-accent")}
                           />
                         ) : item.id === "leads" ? (
                           <HugeiconsIcon
                             icon={Target02Icon}
-                            size={20}
+                            size={18}
                             className={cn(isActive && "text-propai-accent")}
                           />
                         ) : item.id === "properties" ? (
                           <HugeiconsIcon
                             icon={Building05Icon}
-                            size={20}
+                            size={18}
                             className={cn(isActive && "text-propai-accent")}
                           />
                         ) : item.id === "team" ? (
                           <HugeiconsIcon
                             icon={UserGroupIcon}
-                            size={20}
+                            size={18}
                             className={cn(isActive && "text-propai-accent")}
                           />
                         ) : item.id === "voice" ? (
                           <HugeiconsIcon
                             icon={Call02Icon}
-                            size={20}
+                            size={18}
                             className={cn(isActive && "text-propai-accent")}
                           />
                         ) : (
                           <item.icon
                             className={cn(
-                              "h-5 w-5",
+                              "h-[18px] w-[18px]",
                               isActive && "text-propai-accent"
                             )}
                           />
@@ -170,19 +172,19 @@ export function IconRail({
       </TooltipProvider>
 
       {/* Footer */}
-      <div className="flex flex-col items-center gap-2 py-3 px-2">
+      <div className="flex flex-col items-center gap-2 py-4 px-2.5">
         {/* Toggle Panel Button */}
         <TooltipProvider delayDuration={0}>
           <Tooltip>
             <TooltipTrigger asChild>
               <button
                 onClick={onTogglePanel}
-                className="flex h-10 w-10 items-center justify-center rounded-lg text-icon-rail-muted sidebar-icon-hover-transition hover:bg-icon-rail-hover hover:text-icon-rail-foreground"
+                className="flex h-11 w-11 items-center justify-center rounded-xl text-icon-rail-muted sidebar-icon-hover-transition hover:bg-icon-rail-hover hover:text-icon-rail-foreground"
               >
                 {isPanelOpen ? (
-                  <PanelLeftClose className="h-5 w-5" />
+                  <PanelLeftClose className="h-[18px] w-[18px]" />
                 ) : (
-                  <PanelLeft className="h-5 w-5" />
+                  <PanelLeft className="h-[18px] w-[18px]" />
                 )}
               </button>
             </TooltipTrigger>
@@ -202,12 +204,12 @@ export function IconRail({
             <TooltipTrigger asChild>
               <button
                 onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-                className="flex h-10 w-10 items-center justify-center rounded-lg text-icon-rail-muted sidebar-icon-hover-transition hover:bg-icon-rail-hover hover:text-icon-rail-foreground"
+                className="flex h-11 w-11 items-center justify-center rounded-xl text-icon-rail-muted sidebar-icon-hover-transition hover:bg-icon-rail-hover hover:text-icon-rail-foreground"
               >
                 {mounted && theme === "dark" ? (
-                  <Sun className="h-5 w-5" />
+                  <Sun className="h-[18px] w-[18px]" />
                 ) : (
-                  <Moon className="h-5 w-5" />
+                  <Moon className="h-[18px] w-[18px]" />
                 )}
               </button>
             </TooltipTrigger>
@@ -228,7 +230,7 @@ export function IconRail({
           <Tooltip>
             <TooltipTrigger asChild>
               <button 
-                onClick={openUserSettings}
+                onClick={() => router.push("/dashboard/account")}
                 className={cn(
                   "flex items-center justify-center rounded-full sidebar-icon-hover-transition hover:ring-2 hover:ring-propai-accent/30",
                   isUserSettingsActive && "ring-2 ring-propai-accent"

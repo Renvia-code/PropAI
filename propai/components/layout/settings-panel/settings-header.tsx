@@ -1,8 +1,7 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { X } from "lucide-react";
-
-import { useSettingsPanel } from "./settings-panel-provider";
 
 interface SettingsHeaderProps {
   title: string;
@@ -10,7 +9,11 @@ interface SettingsHeaderProps {
 }
 
 export function SettingsHeader({ title, description }: SettingsHeaderProps) {
-  const { close } = useSettingsPanel();
+  const router = useRouter();
+
+  const handleClose = () => {
+    router.push("/dashboard");
+  };
 
   return (
     <div className="flex items-start justify-between border-b border-border pb-6 mb-6">
@@ -21,7 +24,7 @@ export function SettingsHeader({ title, description }: SettingsHeaderProps) {
         )}
       </div>
       <button
-        onClick={close}
+        onClick={handleClose}
         className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
         aria-label="Close settings"
       >
@@ -30,4 +33,3 @@ export function SettingsHeader({ title, description }: SettingsHeaderProps) {
     </div>
   );
 }
-
