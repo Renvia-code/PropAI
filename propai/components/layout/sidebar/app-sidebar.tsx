@@ -27,6 +27,25 @@ export function AppSidebar() {
   // Find active section based on current path
   React.useEffect(() => {
     const active = navigationConfig.find((item) => {
+      // Special handling for grouped navigation
+      if (item.id === "inbox") {
+        return pathname.startsWith("/dashboard/conversations") || pathname.startsWith("/dashboard/voice");
+      }
+      if (item.id === "leads") {
+        return pathname.startsWith("/dashboard/leads") || 
+               pathname.startsWith("/dashboard/site-visits") || 
+               pathname.startsWith("/dashboard/properties");
+      }
+      if (item.id === "agent") {
+        return pathname.startsWith("/dashboard/agent") || pathname.startsWith("/dashboard/knowledge");
+      }
+      if (item.id === "channels") {
+        return pathname.startsWith("/dashboard/channels") || pathname.startsWith("/dashboard/integrations");
+      }
+      if (item.id === "settings") {
+        return pathname.startsWith("/dashboard/settings") || pathname.startsWith("/dashboard/team");
+      }
+      // Default matching
       if (item.href === "/dashboard" && pathname === "/dashboard") {
         return true;
       }
@@ -41,32 +60,50 @@ export function AppSidebar() {
     }
   }, [pathname]);
 
-  // Handle icon click
+  /**
+   * Handle icon click - Psychologically optimized behavior:
+   * 
+   * 1. If clicking an icon WITHOUT submenu (Home) → Navigate directly
+   * 2. If clicking an icon WITH submenu:
+   *    a. If clicking SAME section that's already open → Toggle panel (close)
+   *    b. If clicking DIFFERENT section → Open panel + Navigate to first submenu item
+   * 
+   * This ensures users always land on the default page when switching sections.
+   */
   const handleIconClick = (item: NavItem) => {
     if (isMobile) {
-      // On mobile, open the sheet if clicking a different section with submenu
+      // Mobile: Open sheet with submenu, navigate to first item
       if (item.submenu && item.submenu.length > 0) {
         setActiveSection(item.id);
         setMobileOpen(true);
+        // Navigate to first submenu item (default page)
+        router.push(item.submenu[0].href);
       } else {
-        // For items without submenu, navigate directly
+        // No submenu, navigate directly
         router.push(item.href);
       }
     } else {
-      // On desktop
+      // Desktop
       if (item.submenu && item.submenu.length > 0) {
-        // If clicking the same section, toggle the panel
+        // If clicking the SAME section that's already active and panel is open
         if (activeSection === item.id && isPanelOpen) {
+          // Just toggle the panel (close it)
           togglePanel();
         } else {
-          // Switch to new section and open panel
+          // Switching to a DIFFERENT section or panel was closed
           setActiveSection(item.id);
+          
+          // Open panel if not already open
           if (!isPanelOpen) {
             setIsPanelOpen(true);
           }
+          
+          // Navigate to the first submenu item (default/overview page)
+          // This is the key UX improvement - auto-navigate when switching sections
+          router.push(item.submenu[0].href);
         }
       } else {
-        // For items without submenu (like Home), navigate directly
+        // No submenu (like Home), navigate directly
         router.push(item.href);
       }
     }

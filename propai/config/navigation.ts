@@ -1,23 +1,51 @@
 import {
   Home,
   MessageSquare,
-  Phone,
+  Users,
   Bot,
-  BookOpen,
   BarChart3,
   Plug,
-  Target,
+  Settings,
+  Inbox,
+  UserX,
+  User,
+  Phone,
+  Archive,
+  LayoutGrid,
+  GitBranch,
   Calendar,
   Building2,
-  Link,
-  Users,
-  Settings,
+  Upload,
+  Sparkles,
+  FileText,
+  MessageCircle,
+  TrendingUp,
+  UsersRound,
+  Zap,
+  Building,
+  UserCog,
+  Shield,
+  Bell,
+  CreditCard,
+  Lock,
+  Globe,
+  Webhook,
+  Key,
   type LucideIcon,
 } from "lucide-react";
 
 export interface NavSubmenuItem {
   label: string;
   href: string;
+  icon?: LucideIcon;
+  // For brand icons (WhatsApp, Instagram, etc.) - use custom component
+  brandIcon?: "whatsapp" | "instagram" | "facebook" | "line" | "webchat";
+}
+
+export interface NavSubmenuGroup {
+  label: string;
+  items: NavSubmenuItem[];
+  defaultOpen?: boolean;
 }
 
 export interface NavItem {
@@ -29,172 +57,180 @@ export interface NavItem {
     type: "count" | "status";
     value?: string;
   };
+  // Can be flat items or grouped items
   submenu: NavSubmenuItem[] | null;
+  submenuGroups?: NavSubmenuGroup[] | null;
+  position?: "top" | "bottom";
 }
 
+/**
+ * Navigation Structure - Award-Winning Design (2025)
+ */
+
 export const navigationConfig: NavItem[] = [
+  // ═══════════════════════════════════════════════════════════════
+  // 1. HOME
+  // ═══════════════════════════════════════════════════════════════
   {
     id: "home",
     label: "Home",
     icon: Home,
     href: "/dashboard",
     submenu: null,
+    position: "top",
   },
+
+  // ═══════════════════════════════════════════════════════════════
+  // 2. INBOX - Communication Hub
+  // ═══════════════════════════════════════════════════════════════
   {
-    id: "conversations",
-    label: "Conversations",
+    id: "inbox",
+    label: "Inbox",
     icon: MessageSquare,
     href: "/dashboard/conversations",
     badge: { type: "count", value: "unreadCount" },
     submenu: [
-      { label: "All Conversations", href: "/dashboard/conversations" },
-      { label: "Unassigned", href: "/dashboard/conversations?filter=unassigned" },
-      { label: "My Conversations", href: "/dashboard/conversations?filter=mine" },
-      { label: "Archived", href: "/dashboard/conversations/archived" },
+      { label: "All Conversations", href: "/dashboard/conversations", icon: Inbox },
+      { label: "Unassigned", href: "/dashboard/conversations?filter=unassigned", icon: UserX },
+      { label: "My Conversations", href: "/dashboard/conversations?filter=mine", icon: User },
+      { label: "Voice Calls", href: "/dashboard/voice", icon: Phone },
+      { label: "Archived", href: "/dashboard/conversations/archived", icon: Archive },
     ],
+    position: "top",
   },
+
+  // ═══════════════════════════════════════════════════════════════
+  // 3. LEADS - CRM Hub
+  // ═══════════════════════════════════════════════════════════════
   {
-    id: "voice",
-    label: "Voice AI",
-    icon: Phone,
-    href: "/dashboard/voice",
+    id: "leads",
+    label: "Leads",
+    icon: Users,
+    href: "/dashboard/leads",
+    badge: { type: "count", value: "newLeadsToday" },
     submenu: [
-      { label: "Call Logs", href: "/dashboard/voice/logs" },
-      { label: "Phone Numbers", href: "/dashboard/voice/numbers" },
-      { label: "Outbound Campaigns", href: "/dashboard/voice/campaigns" },
-      { label: "Voice Settings", href: "/dashboard/voice/settings" },
+      { label: "All Leads", href: "/dashboard/leads", icon: LayoutGrid },
+      { label: "Pipeline", href: "/dashboard/leads/pipeline", icon: GitBranch },
+      { label: "Site Visits", href: "/dashboard/site-visits", icon: Calendar },
+      { label: "Properties", href: "/dashboard/properties", icon: Building2 },
+      { label: "Import / Export", href: "/dashboard/leads/import", icon: Upload },
     ],
+    position: "top",
   },
+
+  // ═══════════════════════════════════════════════════════════════
+  // 4. AI AGENT
+  // ═══════════════════════════════════════════════════════════════
   {
     id: "agent",
     label: "AI Agent",
     icon: Bot,
     href: "/dashboard/agent",
     submenu: [
-      { label: "Agent Setup", href: "/dashboard/agent/setup" },
-      { label: "Industry Templates", href: "/dashboard/agent/templates" },
-      { label: "Custom Instructions", href: "/dashboard/agent/instructions" },
-      { label: "Lead Forms", href: "/dashboard/agent/forms" },
-      { label: "Test Agent", href: "/dashboard/agent/test" },
+      { label: "Overview", href: "/dashboard/agent", icon: Sparkles },
+      { label: "Configuration", href: "/dashboard/agent/setup", icon: Settings },
+      { label: "Knowledge Base", href: "/dashboard/knowledge", icon: FileText },
+      { label: "Upload Files", href: "/dashboard/knowledge/files", icon: Upload },
+      { label: "Test Agent", href: "/dashboard/agent/test", icon: MessageCircle },
     ],
+    position: "top",
   },
-  {
-    id: "knowledge",
-    label: "Knowledge Base",
-    icon: BookOpen,
-    href: "/dashboard/knowledge",
-    submenu: [
-      { label: "Files", href: "/dashboard/knowledge/files" },
-      { label: "Database", href: "/dashboard/knowledge/database" },
-      { label: "Website Crawler", href: "/dashboard/knowledge/crawler" },
-      { label: "Q&A Pairs", href: "/dashboard/knowledge/qa" },
-      { label: "Knowledge Stats", href: "/dashboard/knowledge/stats" },
-    ],
-  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // 5. ANALYTICS
+  // ═══════════════════════════════════════════════════════════════
   {
     id: "analytics",
     label: "Analytics",
     icon: BarChart3,
     href: "/dashboard/analytics",
     submenu: [
-      { label: "Overview", href: "/dashboard/analytics" },
-      { label: "AI Performance", href: "/dashboard/analytics/ai" },
-      { label: "Channel Insights", href: "/dashboard/analytics/channels" },
-      { label: "Lead Analytics", href: "/dashboard/analytics/leads" },
-      { label: "Team Performance", href: "/dashboard/analytics/team" },
+      { label: "Overview", href: "/dashboard/analytics", icon: LayoutGrid },
+      { label: "AI Performance", href: "/dashboard/analytics/ai", icon: Bot },
+      { label: "Lead Analytics", href: "/dashboard/analytics/leads", icon: TrendingUp },
+      { label: "Channel Insights", href: "/dashboard/analytics/channels", icon: BarChart3 },
+      { label: "Team Performance", href: "/dashboard/analytics/team", icon: UsersRound },
     ],
+    position: "top",
   },
+
+  // ═══════════════════════════════════════════════════════════════
+  // 6. CHANNELS - With Brand Icons
+  // ═══════════════════════════════════════════════════════════════
   {
     id: "channels",
     label: "Channels",
     icon: Plug,
     href: "/dashboard/channels",
-    submenu: [
-      { label: "All Channels", href: "/dashboard/channels" },
-      { label: "WhatsApp", href: "/dashboard/channels/whatsapp" },
-      { label: "Facebook", href: "/dashboard/channels/facebook" },
-      { label: "Instagram", href: "/dashboard/channels/instagram" },
-      { label: "Line", href: "/dashboard/channels/line" },
-      { label: "SMS", href: "/dashboard/channels/sms" },
-      { label: "Email", href: "/dashboard/channels/email" },
-      { label: "Web Chat", href: "/dashboard/channels/webchat" },
+    submenu: null,
+    submenuGroups: [
+      {
+        label: "Messaging",
+        defaultOpen: true,
+        items: [
+          { label: "All Channels", href: "/dashboard/channels", icon: LayoutGrid },
+          { label: "WhatsApp", href: "/dashboard/channels/whatsapp", brandIcon: "whatsapp" },
+          { label: "Instagram", href: "/dashboard/channels/instagram", brandIcon: "instagram" },
+          { label: "Facebook", href: "/dashboard/channels/facebook", brandIcon: "facebook" },
+          { label: "Line", href: "/dashboard/channels/line", brandIcon: "line" },
+          { label: "Web Chat", href: "/dashboard/channels/webchat", brandIcon: "webchat" },
+        ],
+      },
+      {
+        label: "Integrations",
+        defaultOpen: false,
+        items: [
+          { label: "All Integrations", href: "/dashboard/integrations", icon: Zap },
+          { label: "CRM", href: "/dashboard/integrations/crm", icon: Building },
+          { label: "Webhooks", href: "/dashboard/integrations/webhooks", icon: Webhook },
+          { label: "API Keys", href: "/dashboard/integrations/api", icon: Key },
+        ],
+      },
     ],
+    position: "top",
   },
-  {
-    id: "leads",
-    label: "Leads",
-    icon: Target,
-    href: "/dashboard/leads",
-    badge: { type: "count", value: "newLeadsToday" },
-    submenu: [
-      { label: "All Leads", href: "/dashboard/leads" },
-      { label: "Pipeline", href: "/dashboard/leads/pipeline" },
-      { label: "Hot Leads", href: "/dashboard/leads?filter=hot" },
-      { label: "Import/Export", href: "/dashboard/leads/import" },
-    ],
-  },
-  {
-    id: "siteVisits",
-    label: "Site Visits",
-    icon: Calendar,
-    href: "/dashboard/site-visits",
-    badge: { type: "count", value: "todayVisits" },
-    submenu: [
-      { label: "Calendar", href: "/dashboard/site-visits" },
-      { label: "Upcoming", href: "/dashboard/site-visits/upcoming" },
-      { label: "Completed", href: "/dashboard/site-visits/completed" },
-      { label: "Booking Settings", href: "/dashboard/site-visits/settings" },
-    ],
-  },
-  {
-    id: "properties",
-    label: "Properties",
-    icon: Building2,
-    href: "/dashboard/properties",
-    submenu: [
-      { label: "All Properties", href: "/dashboard/properties" },
-      { label: "Projects", href: "/dashboard/properties/projects" },
-      { label: "Units", href: "/dashboard/properties/units" },
-      { label: "Import", href: "/dashboard/properties/import" },
-    ],
-  },
-  {
-    id: "integrations",
-    label: "Integrations",
-    icon: Link,
-    href: "/dashboard/integrations",
-    submenu: [
-      { label: "All Integrations", href: "/dashboard/integrations" },
-      { label: "CRM", href: "/dashboard/integrations/crm" },
-      { label: "Automation", href: "/dashboard/integrations/automation" },
-      { label: "Webhooks", href: "/dashboard/integrations/webhooks" },
-      { label: "API Keys", href: "/dashboard/integrations/api" },
-    ],
-  },
-  {
-    id: "team",
-    label: "Team",
-    icon: Users,
-    href: "/dashboard/team",
-    submenu: [
-      { label: "Members", href: "/dashboard/team" },
-      { label: "Roles & Permissions", href: "/dashboard/team/roles" },
-      { label: "Working Hours", href: "/dashboard/team/hours" },
-      { label: "Assignment Rules", href: "/dashboard/team/assignments" },
-    ],
-  },
+
+  // ═══════════════════════════════════════════════════════════════
+  // 7. SETTINGS
+  // ═══════════════════════════════════════════════════════════════
   {
     id: "settings",
     label: "Settings",
     icon: Settings,
     href: "/dashboard/settings",
-    submenu: [
-      { label: "Organization", href: "/dashboard/settings" },
-      { label: "Branding", href: "/dashboard/settings/branding" },
-      { label: "Notifications", href: "/dashboard/settings/notifications" },
-      { label: "Billing", href: "/dashboard/settings/billing" },
-      { label: "Security", href: "/dashboard/settings/security" },
+    submenu: null,
+    submenuGroups: [
+      {
+        label: "Organization",
+        defaultOpen: true,
+        items: [
+          { label: "General", href: "/dashboard/settings", icon: Building },
+          { label: "Notifications", href: "/dashboard/settings/notifications", icon: Bell },
+          { label: "Billing", href: "/dashboard/settings/billing", icon: CreditCard },
+        ],
+      },
+      {
+        label: "Team",
+        defaultOpen: false,
+        items: [
+          { label: "Members", href: "/dashboard/team", icon: UsersRound },
+          { label: "Roles & Permissions", href: "/dashboard/team/roles", icon: UserCog },
+        ],
+      },
+      {
+        label: "Security",
+        defaultOpen: false,
+        items: [
+          { label: "Security Settings", href: "/dashboard/settings/security", icon: Lock },
+        ],
+      },
     ],
+    position: "bottom",
   },
 ];
 
+export const navBadgeCounts = {
+  unreadCount: 5,
+  newLeadsToday: 12,
+  todayVisits: 3,
+};
